@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>S-DES Simulator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="static/style.css"/>
+</head>
+<body>
+
+<div class="bg-layer"></div>
+<div class="grid-bg"></div>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">SD</div>
+    <div class="logo-text"><span>S-DES</span> Simulator</div>
+  </div>
+  <div class="header-badge">Kriptografi · 2025/2026</div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-eyebrow">
+      <span class="dot"></span>
+      Simplified Data Encryption Standard
+    </div>
+    <h1>
+      <span class="word">
+        <span class="char" style="--char-index:1">S</span>
+        <span class="char" style="--char-index:2">i</span>
+        <span class="char" style="--char-index:3">m</span>
+        <span class="char" style="--char-index:4">u</span>
+        <span class="char" style="--char-index:5">l</span>
+        <span class="char" style="--char-index:6">a</span>
+        <span class="char" style="--char-index:7">s</span>
+        <span class="char" style="--char-index:8">i</span>
+      </span>
+      &nbsp;
+      <span class="word grad">
+        <span class="char" style="--char-index:9">S</span>
+        <span class="char" style="--char-index:10">-</span>
+        <span class="char" style="--char-index:11">D</span>
+        <span class="char" style="--char-index:12">E</span>
+        <span class="char" style="--char-index:13">S</span>
+      </span>
+      <br/>
+      <span class="word">
+        <span class="char" style="--char-index:14">I</span>
+        <span class="char" style="--char-index:15">n</span>
+        <span class="char" style="--char-index:16">t</span>
+        <span class="char" style="--char-index:17">e</span>
+        <span class="char" style="--char-index:18">r</span>
+        <span class="char" style="--char-index:19">a</span>
+        <span class="char" style="--char-index:20">k</span>
+        <span class="char" style="--char-index:21">t</span>
+        <span class="char" style="--char-index:22">i</span>
+        <span class="char" style="--char-index:23">f</span>
+      </span>
+    </h1>
+    <p>Enkripsi &amp; dekripsi 8-bit dengan visualisasi setiap langkah perhitungan secara lengkap dan terstruktur.</p>
+  </div>
+
+  <!-- INPUT CARD -->
+  <div class="card">
+    <div class="card-label">Input</div>
+    <div class="form-grid">
+      <div class="field">
+        <label>Plaintext / Ciphertext</label>
+        <div class="input-wrap">
+          <input type="text" id="inp-text" placeholder="00000000" maxlength="8"
+            oninput="updateCounter(this,'cnt-text',8);this.classList.remove('error')"/>
+          <span class="bit-counter" id="cnt-text">0/8</span>
+        </div>
+        <div class="hint">8 bit biner · contoh: 11010111</div>
+      </div>
+      <div class="field">
+        <label>Kunci (Key)</label>
+        <div class="input-wrap">
+          <input type="text" id="inp-key" placeholder="0000000000" maxlength="10"
+            oninput="updateCounter(this,'cnt-key',10);this.classList.remove('error')"/>
+          <span class="bit-counter" id="cnt-key">0/10</span>
+        </div>
+        <div class="hint">10 bit biner · contoh: 1010000010</div>
+      </div>
+      <div class="field">
+        <label>Mode Operasi</label>
+        <div class="mode-toggle">
+          <button class="mode-btn active-enc" id="btn-enc" onclick="setMode('enc')">🔒 Enkripsi</button>
+          <button class="mode-btn" id="btn-dec" onclick="setMode('dec')">🔓 Dekripsi</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="processing" id="proc-anim">
+      <div class="spinner"></div>
+      <span>Memproses algoritma S-DES…</span>
+    </div>
+
+    <div class="error-box" id="err-box">
+      <span>⚠</span><span id="err-txt"></span>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="process()">Submit &rarr;</button>
+      <button class="btn btn-ghost" onclick="resetAll()">Reset</button>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="result-section">
+    <div class="card">
+      <div class="result-header">
+        <div class="card-label" style="margin-bottom:0">Hasil</div>
+        <div id="result-tag" class="result-tag enc">CIPHERTEXT</div>
+      </div>
+
+      <div id="res-bits" class="bit-display"></div>
+      <div id="res-idx"  class="bit-indices"></div>
+
+      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+        <div id="res-val-box" class="result-value-box enc">
+          <span id="res-val" class="result-value enc"></span>
+          <button class="copy-btn" id="copy-btn" onclick="copyResult()">Salin</button>
+        </div>
+      </div>
+
+      <!-- Steps toggle -->
+      <button class="steps-btn" id="steps-btn" onclick="toggleSteps()">
+        <span>📋 Tampilkan Solusi Penyelesaian (Step-by-Step)</span>
+        <span class="arr">▼</span>
+      </button>
+
+      <div id="steps-wrap">
+        <div id="steps-content"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  Simulasi S-DES · Mata Kuliah Kriptografi · Semester Genap 2025/2026
+</footer>
+
+<script src="static/main.js" defer></script>
+</body>
+</html>
